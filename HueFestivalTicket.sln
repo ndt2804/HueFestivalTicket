@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HueFestivalTicket", "HueFestivalTicket\HueFestivalTicket.csproj", "{B841F38B-45EB-480F-87FD-5DAB6A1B8C3F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B841F38B-45EB-480F-87FD-5DAB6A1B8C3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B841F38B-45EB-480F-87FD-5DAB6A1B8C3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B841F38B-45EB-480F-87FD-5DAB6A1B8C3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B841F38B-45EB-480F-87FD-5DAB6A1B8C3F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D027566B-7041-42FB-99F5-E3B173A2B6DF}
+	EndGlobalSection
+EndGlobal
