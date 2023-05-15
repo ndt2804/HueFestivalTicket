@@ -15,18 +15,40 @@ namespace HueFestivalTicket.Controllers
         {
             new News
             {
-                    Title = "Hôm nay troi dep qua",
-                    Decriptions = "Hôm nay troi nang to rat dep, phu hop cho cac cap  doi di choi  vao ngay hom nay",
-                    Image_URL = "Anis.png",
-                    Type_Program = 1,
+                Id = 1,
+                Title = "Hôm nay troi dep qua",
+                Decriptions = "Hôm nay troi nang to rat dep, phu hop cho cac cap  doi di choi  vao ngay hom nay",
+                Date = new DateTime(2023, 5, 15, 10, 30, 0),
+                Image_URL = "Anis.png",
+                Place = "Quảng Trường 10/3",
+                Price = 0,
+                Type_Inoff = 0,
+                Type_Program = 1,
             },
-              new News
+            new News
+            {       
+                Id = 2,
+                Title = "Hôm kia troi dep qua",
+                Decriptions = "Hôm nay troi nang to rat dep, phu hop cho cac cap  doi di choi  vao ngay hom nay",
+                Date = new DateTime(2023, 5, 20, 10, 30, 0),
+                Image_URL = "Anis.png",
+                Place = "Quảng Trường 10/9",
+                Price = 15000,
+                Type_Inoff = 1,
+                Type_Program = 2,
+            },
+            new News
             {
-                    Title = "Hôm nay troi dep qua",
-                    Decriptions = "Hôm nay troi nang to rat dep, phu hop cho cac cap  doi di choi  vao ngay hom nay",
-                    Image_URL = "Anis.png",
-                    Type_Program = 2,
-            }
+                Id = 3,
+                Title = "Hôm qua troi dep qua",
+                Decriptions = "Hôm nay troi nang to rat dep, phu hop cho cac cap  doi di choi  vao ngay hom nay",
+                Date = new DateTime(2023, 5, 15, 10, 30, 0),
+                Image_URL = "Anis.png",
+                Place = "Quảng Trường 10/3",
+                Price = 15000,
+                Type_Inoff = 1,
+                Type_Program = 1,
+            },
         };
 
         [HttpGet]
@@ -34,11 +56,23 @@ namespace HueFestivalTicket.Controllers
         {
             return Ok(news);
         }
-        [HttpGet("{type_program}")]
 
-        public async Task<ActionResult<List<News>>> GetNew(int type_program)
+        //[HttpGet("{Id}")]
+
+        //public async Task<ActionResult<List<News>>> GetNew(int Id)
+        //{
+        //    var ne = news.Find(i => i.Id == Id);
+        //    if (ne == null)
+        //    {
+        //        return BadRequest("Not Found");
+        //    }
+        //    return Ok(ne);
+        //}
+        [HttpGet("{Type_Program}")]
+
+        public async Task<ActionResult<List<News>>> GetTypeProgram(int Type_Program)
         {
-            var ne = news.Find(i => i.Type_Program == type_program);
+            var ne = news.FindAll(i => i.Type_Program == Type_Program);
             if (ne == null)
             {
                 return BadRequest("Not Found");
