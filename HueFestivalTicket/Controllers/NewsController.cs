@@ -49,6 +49,18 @@ namespace HueFestivalTicket.Controllers
                 Type_Inoff = 1,
                 Type_Program = 1,
             },
+             new News
+            {
+                Id = 3,
+                Title = "Hôm qua troi dep qua",
+                Decriptions = "Hôm nay troi nang to rat dep, phu hop cho cac cap  doi di choi  vao ngay hom nay",
+                Date = new DateTime(2023, 5, 15, 10, 30, 0),
+                Image_URL = "Anis.png",
+                Place = "Quảng Trường 10/3",
+                Price = 15000,
+                Type_Inoff = 0,
+                Type_Program = 1,
+            },
         };
 
         [HttpGet]
@@ -56,18 +68,6 @@ namespace HueFestivalTicket.Controllers
         {
             return Ok(news);
         }
-
-        //[HttpGet("{Id}")]
-
-        //public async Task<ActionResult<List<News>>> GetNew(int Id)
-        //{
-        //    var ne = news.Find(i => i.Id == Id);
-        //    if (ne == null)
-        //    {
-        //        return BadRequest("Not Found");
-        //    }
-        //    return Ok(ne);
-        //}
         [HttpGet("{Type_Program}")]
 
         public async Task<ActionResult<List<News>>> GetTypeProgram(int Type_Program)
@@ -79,6 +79,50 @@ namespace HueFestivalTicket.Controllers
             }
             return Ok(ne);
         }
+        [HttpGet("program")]
+        public ActionResult<Dictionary<string, List<News>>> GetProgramsByDate()
+        {
+            // Nhóm danh sách chương trình theo ngày tháng
+            Dictionary<string, List<News>> programsByDate = news.GroupBy(ne => ne.Date.Date.ToString("dd/MM"))
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            if (programsByDate.Count == 0)
+            {
+                return NotFound("No programs found.");
+            }
+
+            return Ok(programsByDate);
+        }
+        //[HttpGet("program/{date}")]
+        //public ActionResult<List<News>> GetProgramsByDate(DateTime date)
+        //{
+        //    // Lọc danh sách chương trình theo ngày tháng
+        //    List<News> programs = news.Where(ne => ne.Date.Date == date.Date).ToList();
+
+        //    if (programs.Count == 0)
+        //    {
+        //        return NotFound("No programs found for the specified date.");
+        //    }
+
+        //    return Ok(programs);
+        //}
+        [HttpGet("program/{date}")]
+        public ActionResult<Dictionary<string, List<News>>> GetProgramsByDateAndType(DateTime date)
+        {
+            // Lấy danh sách chương trình theo ngày và loại
+            Dictionary<string, List<News>> programsByType = news.Where(news => news.Date.Date == date.Date)
+                .GroupBy(news => news.Type_Inoff.ToString())
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            if (programsByType.Count == 0)
+            {
+                return NotFound("No programs found for the specified date.");
+            }
+
+            return Ok(programsByType);
+        }
+
+
         [HttpPost]
         public async Task<ActionResult<List<News>>> AddNews(News ne )
         {
