@@ -1,5 +1,6 @@
 ﻿using HueFestivalTicket.Models.News;
 using HueFestivalTicket.Models.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,7 +64,7 @@ namespace HueFestivalTicket.Controllers
             },
         };
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<News>>> GetNews()
         {
             return Ok(news);
@@ -93,19 +94,6 @@ namespace HueFestivalTicket.Controllers
 
             return Ok(programsByDate);
         }
-        //[HttpGet("program/{date}")]
-        //public ActionResult<List<News>> GetProgramsByDate(DateTime date)
-        //{
-        //    // Lọc danh sách chương trình theo ngày tháng
-        //    List<News> programs = news.Where(ne => ne.Date.Date == date.Date).ToList();
-
-        //    if (programs.Count == 0)
-        //    {
-        //        return NotFound("No programs found for the specified date.");
-        //    }
-
-        //    return Ok(programs);
-        //}
         [HttpGet("program/{date}")]
         public ActionResult<Dictionary<string, List<News>>> GetProgramsByDateAndType(DateTime date)
         {
