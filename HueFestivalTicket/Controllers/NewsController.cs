@@ -64,7 +64,8 @@ namespace HueFestivalTicket.Controllers
             },
         };
 
-        [HttpGet, Authorize(Roles = "Admin")]
+        //[HttpGet, Authorize(Roles = "Admin")]
+        [HttpGet]
         public async Task<ActionResult<List<News>>> GetNews()
         {
             return Ok(news);

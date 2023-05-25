@@ -13,8 +13,6 @@
         public String Place { get; set; } = String.Empty;
 
         public Double Price { get; set; }
-
-
         public int Type_Program { get; set; }
         public int Type_Inoff { get; set; }
 

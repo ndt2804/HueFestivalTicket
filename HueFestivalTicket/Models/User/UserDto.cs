@@ -1,12 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace HueFestivalTicket.Models.User
 {
     public class UserDto
     {
-        [Required]
+        [Required, EmailAddress]
+        public String Email { get; set; } = String.Empty;
         public String Username { get; set; } = String.Empty;
         public String Password { get; set; } = String.Empty;
+        [JsonProperty("role_list")]
+        public string? Role { get; set; }
 
     }
 }
