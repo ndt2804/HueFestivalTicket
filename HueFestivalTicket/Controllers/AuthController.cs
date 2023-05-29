@@ -1,6 +1,8 @@
-﻿using HueFestivalTicket.Models.User;
+﻿using HueFestivalTicket.Database;
+using HueFestivalTicket.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,40 +17,107 @@ namespace HueFestivalTicket.Controllers
     {
         public static User user = new User();
 
+        private readonly DataContext _context;
+
         private readonly IConfiguration _configuration;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration, DataContext context)
         {
             _configuration = configuration;
+            _context = context;
+
         }
 
         [HttpPost]
         [Route("register")]
         public async Task<ActionResult<User>> Register(UserDto request)
         {
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            user.Username = request.Username;
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
-            return Ok(user);    
+            //CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            //user.Username = request.Username;
+            //user.PasswordHash = passwordHash;
+            //user.PasswordSalt = passwordSalt;
+            //return Ok(user);
+
+            if (_context.Users.Any(u => u.Email == request.Email))
+            {
+                return BadRequest("User already exists.");
+            }
+
+            CreatePasswordHash(request.Password,
+                 out byte[] passwordHash,
+                 out byte[] passwordSalt);
+
+            var user = new User
+            {
+                Email = request.Email,
+                Username = request.Username,
+                Role= request.Role,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok("User successfully created!");
         }
+
         [HttpPost]
         [Route("login")]
 
-        public async Task<ActionResult<string>> Login(UserDto request)
+        public async Task<ActionResult<string>> Login(UserLogin request)
         {
-            if(user.Username != request.Username)
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            if (user == null)
             {
                 return BadRequest("User not found.");
             }
-            if(!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+
+            if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {
-                return BadRequest("Wrong Password");
+                return BadRequest("Password is incorrect.");
+            }
+            string token = CreateToken(user);
+
+            return Ok($"Welcome back, {user.Email}! :)");
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(string email, string password)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
             }
 
-            string token = CreateToken(user);
-            return Ok(token);
+            string newPassword = password;
+            CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            return Ok("You may now reset your password.");
         }
+        [HttpPost]
+        [Route("reset-password")]
+        public async Task<ActionResult<dynamic>> ResetPassword(string email)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email.Contains(email));
+            if (user == null)
+            {
+                return NotFound("Not found any user with this email address");
+            }
+
+            string newPassword = GenerateRandomString();
+            CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            await _context.SaveChangesAsync();
+
+
+            return Ok("Check your email address to get reset password");
+        }
+
         private string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
@@ -87,7 +156,14 @@ namespace HueFestivalTicket.Controllers
                 return completeHash.SequenceEqual(passwordHash);
             }
         }
-      
+        public static string GenerateRandomString()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, 16)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
 
     }
 }
