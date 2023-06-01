@@ -1,10 +1,12 @@
 ﻿using HueFestivalTicket.Models.Menu;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace HueFestivalTicket.Models.SubMenu
 {
     public class SubMenu
     {
+        [Key]
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
 

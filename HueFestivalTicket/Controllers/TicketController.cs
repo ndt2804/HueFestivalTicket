@@ -1,7 +1,5 @@
-﻿using HueFestivalTicket.Models.News;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using HueFestivalTicket.Models.News;
 using System;
 
 

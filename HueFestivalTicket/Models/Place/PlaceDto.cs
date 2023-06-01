@@ -2,7 +2,6 @@
 {
     public class PlaceDto
     {
-        public int Id { get; set; }
         public string Title { get; set; }
 
         public string Image_Place { get; set; }

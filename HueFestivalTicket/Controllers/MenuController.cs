@@ -1,5 +1,4 @@
 ﻿using HueFestivalTicket.Models.Menu;
-using HueFestivalTicket.Models.News;
 using HueFestivalTicket.Models.Places;
 using HueFestivalTicket.Models.SubMenu;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +9,7 @@ namespace HueFestivalTicket.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class MenuController : ControllerBase
-    {
+    {   
 
         private static List<Menu> menu = new List<Menu>
         {

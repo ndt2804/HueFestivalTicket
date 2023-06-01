@@ -1,9 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace HueFestivalTicket.Models.Menu
 {
     public class Menu
     {
+        [Key]
         public int Id { get; set; }
         public string Title { get; set; }
 

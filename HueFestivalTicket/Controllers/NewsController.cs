@@ -1,8 +1,14 @@
-﻿using HueFestivalTicket.Models.News;
+﻿using Azure.Core;
+using HueFestivalTicket.Database;
+using HueFestivalTicket.Models.News;
+using HueFestivalTicket.Models.ProgramFes;
 using HueFestivalTicket.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace HueFestivalTicket.Controllers
 {
@@ -12,113 +18,92 @@ namespace HueFestivalTicket.Controllers
     {
 
 
-        private static List<News> news = new List<News>
+        private readonly DataContext _context;
+        public NewsController(DataContext context)
         {
-            new News
-            {
-                Id = 1,
-                Title = "Hôm nay troi dep qua",
-                Decriptions = "Hôm nay troi nang to rat dep, phu hop cho cac cap  doi di choi  vao ngay hom nay",
-                Date = new DateTime(2023, 5, 15, 10, 30, 0),
-                Image_URL = "Anis.png",
-                Place = "Quảng Trường 10/3",
-                Price = 0,
-                Type_Inoff = 0,
-                Type_Program = 1,
-            },
-            new News
-            {       
-                Id = 2,
-                Title = "Hôm kia troi dep qua",
-                Decriptions = "Hôm nay troi nang to rat dep, phu hop cho cac cap  doi di choi  vao ngay hom nay",
-                Date = new DateTime(2023, 5, 20, 10, 30, 0),
-                Image_URL = "Anis.png",
-                Place = "Quảng Trường 10/9",
-                Price = 15000,
-                Type_Inoff = 1,
-                Type_Program = 2,
-            },
-            new News
-            {
-                Id = 3,
-                Title = "Hôm qua troi dep qua",
-                Decriptions = "Hôm nay troi nang to rat dep, phu hop cho cac cap  doi di choi  vao ngay hom nay",
-                Date = new DateTime(2023, 5, 15, 10, 30, 0),
-                Image_URL = "Anis.png",
-                Place = "Quảng Trường 10/3",
-                Price = 15000,
-                Type_Inoff = 1,
-                Type_Program = 1,
-            },
-             new News
-            {
-                Id = 3,
-                Title = "Hôm qua troi dep qua",
-                Decriptions = "Hôm nay troi nang to rat dep, phu hop cho cac cap  doi di choi  vao ngay hom nay",
-                Date = new DateTime(2023, 5, 15, 10, 30, 0),
-                Image_URL = "Anis.png",
-                Place = "Quảng Trường 10/3",
-                Price = 15000,
-                Type_Inoff = 0,
-                Type_Program = 1,
-            },
-        };
+            _context = context;
+
+        }
+        private static List<News> news = new List<News>();
+        private static List<NewsDto> newDto = new List<NewsDto>();
+
+
+
 
         //[HttpGet, Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<ActionResult<List<News>>> GetNews()
+        public async Task<ActionResult<IEnumerable<NewsDto>>> GetNews()
         {
+            var news = _context.News.Select(n => new NewsDto
+            {
+                Id = n.Id,
+                Title = n.Title,
+                Image_URL = n.Image_URL,
+                Sumary = n.Sumary,
+                Date = n.Date
+            }).ToList();
+
             return Ok(news);
         }
-        [HttpGet("{Type_Program}")]
-
-        public async Task<ActionResult<List<News>>> GetTypeProgram(int Type_Program)
+        [HttpGet("DetailNews/{{id}}")]
+        public async Task<ActionResult<List<News>>> getDeltailNews(int id)
         {
-            var ne = news.FindAll(i => i.Type_Program == Type_Program);
-            if (ne == null)
-            {
-                return BadRequest("Not Found");
-            }
-            return Ok(ne);
-        }
-        [HttpGet("program")]
-        public ActionResult<Dictionary<string, List<News>>> GetProgramsByDate()
-        {
-            // Nhóm danh sách chương trình theo ngày tháng
-            Dictionary<string, List<News>> programsByDate = news.GroupBy(ne => ne.Date.Date.ToString("dd/MM"))
-                .ToDictionary(g => g.Key, g => g.ToList());
+            var newsDetail = await _context.News.Where(n => n.Id == id).ToListAsync();
 
-            if (programsByDate.Count == 0)
+            if (newsDetail == null || newsDetail.Count == 0)
             {
-                return NotFound("No programs found.");
+                return NotFound("Not Found");
             }
 
-            return Ok(programsByDate);
+            return Ok(newsDetail);
         }
-        [HttpGet("program/{date}")]
-        public ActionResult<Dictionary<string, List<News>>> GetProgramsByDateAndType(DateTime date)
-        {
-            // Lấy danh sách chương trình theo ngày và loại
-            Dictionary<string, List<News>> programsByType = news.Where(news => news.Date.Date == date.Date)
-                .GroupBy(news => news.Type_Inoff.ToString())
-                .ToDictionary(g => g.Key, g => g.ToList());
 
-            if (programsByType.Count == 0)
+
+        [HttpPost("AddNews")]
+        public async Task<ActionResult<News>> AddNews(News news)
+        {
+            var ne = new News
             {
-                return NotFound("No programs found for the specified date.");
+                Title = news.Title,
+                Sumary = news.Sumary,
+                Image_URL = news.Image_URL,
+                Date = DateTime.Now,
+                Content = news.Content,
+                Author = news.Author,
+                Keyword = news.Keyword,
+            };
+
+            _context.News.Add(ne);
+            await _context.SaveChangesAsync();
+
+            return Ok("News successfully created!");
+        }
+
+        [HttpGet("RelatedNews/{id}")]
+        public ActionResult<IEnumerable<News>> GetRelatedNews(int id)
+        {
+            // Lấy bài viết chi tiết
+            var detailNews = _context.News.SingleOrDefault(n => n.Id == id);
+
+            if (detailNews == null)
+            {
+                return NotFound("No news found for the specified ID.");
+            }
+            // Tách các từ khóa của bài viết chi tiết thành một mảng
+            var detailNewsKeywords = detailNews.Keyword.Split(", ");
+
+            // Lấy danh sách các bài viết liên quan
+            var relatedNews = _context.News
+                .Where(n => n.Id != id && detailNewsKeywords.Contains(n.Keyword))
+                .ToList();
+            if (relatedNews.Count == 0)
+            {
+                return NotFound("No related news found.");
             }
 
-            return Ok(programsByType);
+            return Ok(relatedNews);
         }
 
-
-        [HttpPost]
-        public async Task<ActionResult<List<News>>> AddNews(News ne )
-        {
-            news.Add(ne);
-            return Ok(news);
-        }
-
+      
     }
-
 }

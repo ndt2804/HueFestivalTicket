@@ -1,7 +1,11 @@
-﻿namespace HueFestivalTicket.Models.News
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HueFestivalTicket.Models.ProgramFes
 {
-    public class NewDto
+    public class ProgramFes
     {
+
+        [Key]
         public int Id { get; set; }
         public String Title { get; set; } = String.Empty;
 
@@ -13,8 +17,9 @@
         public String Place { get; set; } = String.Empty;
 
         public Double Price { get; set; }
-        public int Type_Program { get; set; }
-        public int Type_Inoff { get; set; }
 
+        public int Type_Program { get; set; }
+
+        public int Type_Inoff { get; set; }
     }
 }

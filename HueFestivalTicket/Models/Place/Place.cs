@@ -1,10 +1,13 @@
 ﻿using HueFestivalTicket.Models.Menu;
 using HueFestivalTicket.Models.SubMenu;
+using System.ComponentModel.DataAnnotations;
 
 namespace HueFestivalTicket.Models.Places
 {
     public class Place
     {
+
+        [Key]
         public int Id { get; set; }
         public string Title { get; set; }
 
