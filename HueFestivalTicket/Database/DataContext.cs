@@ -2,6 +2,7 @@
 using HueFestivalTicket.Models.ProgramFes;
 using HueFestivalTicket.Models.Role;
 using HueFestivalTicket.Models.Support;
+using HueFestivalTicket.Models.TicketingPoint;
 using HueFestivalTicket.Models.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,5 +18,6 @@ namespace HueFestivalTicket.Database
         public DbSet<Support>  Support { get; set; }
         public DbSet<SupportDetail> SupportDetails { get; set; }
         public DbSet<News> News { get; set; }
+        public DbSet<TicketingPoint> TicketingPoint { get; set; }
     }
 }

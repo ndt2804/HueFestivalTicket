@@ -45,6 +45,7 @@ namespace HueFestivalTicket.Controllers
 
             return Ok(news);
         }
+
         [HttpGet("DetailNews/{{id}}")]
         public async Task<ActionResult<List<News>>> getDeltailNews(int id)
         {
