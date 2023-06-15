@@ -28,7 +28,7 @@ namespace HueFestivalTicket.Controllers
 
         }
 
-        [HttpPost("qrcode")]
+        [HttpPost("scanQrcode")]
 
         //[HttpPost, Authorize(Roles = "Admin")]
         public async Task<IActionResult> ScanQRCode()
