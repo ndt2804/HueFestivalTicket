@@ -7,6 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 using System.IO;
 using QRCoder;
+using ZXing;
+using ZXing.SkiaSharp;
+using SkiaSharp;
+using ZXing.Common;
+using System;
+using ZXing.QrCode.Internal;
 
 namespace HueFestivalTicket.Controllers
 {
@@ -22,20 +28,30 @@ namespace HueFestivalTicket.Controllers
 
         }
 
-        //[HttpPost]
-        ////[HttpPost, Authorize(Roles = "Admin")]
-        //public string ReadQRCode(string imagePath)
-        //{
-        //    using (var bitmap = new Bitmap(imagePath))
-        //    {
-        //        var qrCodeBitmap = new QRCodeBitmap(bitmap);
-        //        var qrCodeDecoder = new QRCodeDecoder();
-        //        var qrCodeText = qrCodeDecoder.Decode(qrCodeBitmap);
+        [HttpPost("qrcode")]
 
-        //        return qrCodeText;
-        //    }
-        //}
+        //[HttpPost, Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ScanQRCode()
+        {
+            string image = "D:\\Dotnet\\HueFestivalTicket\\HueFestivalTicket\\Image\\qrcode.png";
 
-
-    }
+            var reader = new BarcodeReaderGeneric();
+            Bitmap bitmap = (Bitmap)Image.FromFile(image);
+            using (bitmap)
+            {
+                LuminanceSource source;
+                source = new ZXing.Windows.Compatibility.BitmapLuminanceSource(bitmap);
+                Result result = reader.Decode(source);
+                if (result != null)
+                {
+                    return Ok(result.Text);
+                }
+                else
+                {
+                    return NotFound("No QR Code found in the image.");
+                }
+            }
+        }
+        }
 }
+
