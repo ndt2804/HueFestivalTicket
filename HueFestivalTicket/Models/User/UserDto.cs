@@ -9,8 +9,6 @@ namespace HueFestivalTicket.Models.User
         public String Email { get; set; } = String.Empty;
         public String Username { get; set; } = String.Empty;
         public String Password { get; set; } = String.Empty;
-        [JsonProperty("role_list")]
-        public string? Role { get; set; }
 
     }
 }

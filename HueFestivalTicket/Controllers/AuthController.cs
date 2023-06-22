@@ -14,7 +14,9 @@ namespace HueFestivalTicket.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
+
     {
+        public static UserDb UserDb = new UserDb();
         public static User user = new User();
 
         private readonly DataContext _context;
@@ -32,13 +34,8 @@ namespace HueFestivalTicket.Controllers
         [Route("register")]
         public async Task<ActionResult<User>> Register(UserDto request)
         {
-            //CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            //user.Username = request.Username;
-            //user.PasswordHash = passwordHash;
-            //user.PasswordSalt = passwordSalt;
-            //return Ok(user);
 
-            if (_context.Users.Any(u => u.Email == request.Email))
+            if (_context.UsersDb.Any(u => u.Email == request.Email))
             {
                 return BadRequest("User already exists.");
             }
@@ -47,16 +44,15 @@ namespace HueFestivalTicket.Controllers
                  out byte[] passwordHash,
                  out byte[] passwordSalt);
 
-            var user = new User
+            var user = new UserDb
             {
                 Email = request.Email,
                 Username = request.Username,
-                Role= request.Role,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
             };
 
-            _context.Users.Add(user);
+            _context.UsersDb.Add(user);
             await _context.SaveChangesAsync();
 
             return Ok("User successfully created!");
@@ -67,7 +63,7 @@ namespace HueFestivalTicket.Controllers
 
         public async Task<ActionResult<string>> Login(UserLogin request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            var user = await _context.UsersDb.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null)
             {
                 return BadRequest("User not found.");
@@ -86,7 +82,7 @@ namespace HueFestivalTicket.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(string email, string password)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.UsersDb.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
             {
                 return BadRequest("User not found.");
@@ -103,7 +99,7 @@ namespace HueFestivalTicket.Controllers
         [Route("reset-password")]
         public async Task<ActionResult<dynamic>> ResetPassword(string email)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email.Contains(email));
+            var user = _context.UsersDb.FirstOrDefault(u => u.Email.Contains(email));
             if (user == null)
             {
                 return NotFound("Not found any user with this email address");
@@ -124,16 +120,16 @@ namespace HueFestivalTicket.Controllers
         {
             var refreshToken = Request.Cookies["refreshToken"];
 
-            if (!user.RefreshToken.Equals(refreshToken))
+            if (!UserDb.RefreshToken.Equals(refreshToken))
             {
                 return Unauthorized("Invalid Refresh Token.");
             }
-            else if (user.TokenExpires < DateTime.Now)
+            else if (UserDb.TokenExpires < DateTime.Now)
             {
                 return Unauthorized("Token expired.");
             }
 
-            string token = CreateToken(user);
+            string token = CreateToken(UserDb);
             var newRefreshToken = GenerateRefreshToken();
             SetRefreshToken(newRefreshToken);
 
@@ -161,12 +157,12 @@ namespace HueFestivalTicket.Controllers
             };
             Response.Cookies.Append("refreshToken", newRefreshToken.Token, cookieOptions);
 
-            user.RefreshToken = newRefreshToken.Token;
-            user.TokenCreated = newRefreshToken.Created;
-            user.TokenExpires = newRefreshToken.Expires;
+            UserDb.RefreshToken = newRefreshToken.Token;
+            UserDb.TokenCreated = newRefreshToken.Created;
+            UserDb.TokenExpires = newRefreshToken.Expires;
         }
 
-        private string CreateToken(User user)
+        private string CreateToken(UserDb user)
         {
             List<Claim> claims = new List<Claim>
             {

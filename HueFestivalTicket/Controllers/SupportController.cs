@@ -1,4 +1,6 @@
 ﻿using HueFestivalTicket.Database;
+using HueFestivalTicket.Models.News;
+using HueFestivalTicket.Models.ProgramFes;
 using HueFestivalTicket.Models.Support;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,16 +22,22 @@ namespace HueFestivalTicket.Controllers
         private static List<Support> Supports = new List<Support>();
 
         [HttpGet("listSupport")]
-        public async Task<ActionResult<List<Support>>> getSupport()
+        public async Task<ActionResult<IEnumerable<Support>>> getSupport()
         {
-            var listSupport = await _context.Support.ToListAsync();
-           
-            return Ok(listSupport);
+            var support = _context.Support.Select(n => new SupportDetail
+            {
+                Id = n.Id,
+                Title = n.Title,
+
+            }).ToList();
+
+            return Ok(support);
         }
+
         [HttpGet("listSupport/{id}")]
         public async Task<ActionResult<List<Support>>> getDeltailSupport(int id)
         {
-            var supportDetail = _context.SupportDetails.SingleOrDefault(sd => sd.Id == id);
+            var supportDetail = _context.Support.SingleOrDefault(sd => sd.Id == id);
 
             if (supportDetail == null)
             {
@@ -40,12 +48,13 @@ namespace HueFestivalTicket.Controllers
         }
 
         [HttpPost("AddSupport")]
-        public async Task<ActionResult<List<Support>>> addSupport( Support support)
+        public async Task<ActionResult<List<Support>>> addSupport(SupportDto support)
         {
 
             var sup = new Support
             {
                 Title = support.Title,
+                Content = support.Content,
             };
 
             _context.Support.Add(sup);

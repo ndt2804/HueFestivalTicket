@@ -34,14 +34,30 @@ namespace HueFestivalTicket.Controllers
 
             return Ok(placeTicket);
         }
+        [HttpPost("addTicketPoint")]
+        public async Task<ActionResult<TicketingPoint>> AddPlaceTicket(TicketPointDto ticketingPoint)
+        {
+            var ticketPoint = new TicketingPoint
+            {
+                Title = ticketingPoint.Title,
+                address = ticketingPoint.address,
+                Image_Ticketing = ticketingPoint.Image_Ticketing,
+                phone = ticketingPoint.phone,
+            };
+
+            _context.TicketingPoint.Add(ticketPoint);
+            await _context.SaveChangesAsync();
+
+            return Ok("addTicketPoint successfully created!");
+        }
+
         [HttpGet("priceTicket")]
         public async Task<ActionResult<IEnumerable<ProgramFes>>> GetPriceTicket()
         {
             var priceTickets = await _context.ProgramFes
-                .Where(n => n.Type_Inoff == 1) // Lọc các vé có type_Inoff = 1
-                .Select(n => new ProgramFes
+                .Where(n => n.Type_Inoff == 2) // Lọc các vé có type_Inoff = 2
+                .Select(n => new ProgramPriceTicket
                 {
-                    Id = n.Id,
                     Title = n.Title,
                     Price = n.Price
                 })

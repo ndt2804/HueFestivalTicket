@@ -3,6 +3,7 @@ using HueFestivalTicket.Models.ProgramFes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SkiaSharp;
 
 namespace HueFestivalTicket.Controllers
 {
@@ -98,6 +99,21 @@ namespace HueFestivalTicket.Controllers
 
             return Ok(programsByType);
         }
+
+        [HttpGet("program/detail/{id}")]
+        public async Task<ActionResult<List<ProgramFes>>> getProgramById(int id)
+        {
+            var program = await _context.ProgramFes.Where(n => n.Id == id).ToListAsync();
+            if (program == null || program.Count == 0)
+            {
+                return NotFound("Not Found");
+            }
+
+            return Ok(program);
+
+        }
+
+
 
     }
 }

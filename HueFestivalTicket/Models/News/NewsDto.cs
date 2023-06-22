@@ -6,10 +6,10 @@ namespace HueFestivalTicket.Models.News
     {
         [Key]
         public int Id { get; set; }
-        public String Title { get; set; } = String.Empty;
+        public String Title { get; set; }
 
-        public String Sumary { get; set; } = String.Empty;
-        public String Image_URL { get; set; } = String.Empty;
+        public String Sumary { get; set; } 
+        public String Image_URL { get; set; } 
 
         public DateTime Date { get; set; }
 

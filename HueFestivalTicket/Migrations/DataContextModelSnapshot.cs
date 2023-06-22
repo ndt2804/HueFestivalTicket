@@ -103,38 +103,7 @@ namespace HueFestivalTicket.Migrations
                     b.ToTable("ProgramFes");
                 });
 
-            modelBuilder.Entity("HueFestivalTicket.Models.Role.Role", b =>
-                {
-                    b.Property<int>("IdRole")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRole"));
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("IdRole");
-
-                    b.ToTable("Role");
-                });
-
             modelBuilder.Entity("HueFestivalTicket.Models.Support.Support", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Support");
-                });
-
-            modelBuilder.Entity("HueFestivalTicket.Models.Support.SupportDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -152,7 +121,7 @@ namespace HueFestivalTicket.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SupportDetails");
+                    b.ToTable("Support");
                 });
 
             modelBuilder.Entity("HueFestivalTicket.Models.TicketingPoint.TicketingPoint", b =>
@@ -183,7 +152,7 @@ namespace HueFestivalTicket.Migrations
                     b.ToTable("TicketingPoint");
                 });
 
-            modelBuilder.Entity("HueFestivalTicket.Models.User.User", b =>
+            modelBuilder.Entity("HueFestivalTicket.Models.User.UserDb", b =>
                 {
                     b.Property<int>("IdUser")
                         .ValueGeneratedOnAdd()
@@ -221,7 +190,7 @@ namespace HueFestivalTicket.Migrations
 
                     b.HasKey("IdUser");
 
-                    b.ToTable("Users");
+                    b.ToTable("UsersDb");
                 });
 #pragma warning restore 612, 618
         }

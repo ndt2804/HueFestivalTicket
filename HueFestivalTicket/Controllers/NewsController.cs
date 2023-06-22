@@ -24,15 +24,11 @@ namespace HueFestivalTicket.Controllers
             _context = context;
 
         }
-        private static List<News> news = new List<News>();
-        private static List<NewsDto> newDto = new List<NewsDto>();
 
-
-
-
+  
         //[HttpGet, Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<NewsDto>>> GetNews()
+        public async Task<ActionResult<IEnumerable<NewsDto>>> GetNews(int page = 1, int pageSize = 2)
         {
             var news = _context.News.Select(n => new NewsDto
             {
@@ -41,10 +37,14 @@ namespace HueFestivalTicket.Controllers
                 Image_URL = n.Image_URL,
                 Sumary = n.Sumary,
                 Date = n.Date
-            }).ToList();
+            }).Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             return Ok(news);
         }
+
+
 
         [HttpGet("DetailNews/{{id}}")]
         public async Task<ActionResult<List<News>>> getDeltailNews(int id)

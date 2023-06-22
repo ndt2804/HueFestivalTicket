@@ -86,19 +86,6 @@ namespace HueFestivalTicket.Controllers
 
         [HttpGet]
 
-        //public ActionResult<IEnumerable<Menu>> GetMenuWithSubMenu()
-        //{
-        //    var result = menu.Select(m => new Menu
-        //    {
-        //        Id = m.Id,
-        //        Title = m.Title,
-        //        Image_Menu = m.Image_Menu,
-        //        Type_Data = m.Type_Data,
-        //        SubMenu = subMenu.Where(sm => sm.Type_Id_Menu == m.Id).Select(sm => sm.Title).ToList()
-        //    }).ToList();
-
-        //    return Ok(result);
-        //}
         public IActionResult GetMenuWithSubMenu()
         {
             var result = menu.Select(m => new {

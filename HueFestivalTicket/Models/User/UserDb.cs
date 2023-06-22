@@ -1,13 +1,11 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
-
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HueFestivalTicket.Models.User
 {
-    public class User
+    public class UserDb
     {
         [Key]
-        public int  IdUser { get; set; }
+        public int IdUser { get; set; }
         public String Email { get; set; } = String.Empty;
         public String Username { get; set; } = String.Empty;
 
@@ -18,7 +16,6 @@ namespace HueFestivalTicket.Models.User
         public string RefreshToken { get; set; } = string.Empty;
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
-        //public List<SavedPostDto> SavedPosts { get; set; } = new List<SavedPostDto>();
 
     }
 }

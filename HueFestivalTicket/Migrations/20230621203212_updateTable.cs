@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HueFestivalTicket.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class updateTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,32 +51,7 @@ namespace HueFestivalTicket.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Role",
-                columns: table => new
-                {
-                    IdRole = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Role", x => x.IdRole);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Support",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Support", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SupportDetails",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -86,7 +61,7 @@ namespace HueFestivalTicket.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SupportDetails", x => x.Id);
+                    table.PrimaryKey("PK_Support", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -106,7 +81,7 @@ namespace HueFestivalTicket.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "UsersDb",
                 columns: table => new
                 {
                     IdUser = table.Column<int>(type: "int", nullable: false)
@@ -122,7 +97,7 @@ namespace HueFestivalTicket.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.IdUser);
+                    table.PrimaryKey("PK_UsersDb", x => x.IdUser);
                 });
         }
 
@@ -136,19 +111,13 @@ namespace HueFestivalTicket.Migrations
                 name: "ProgramFes");
 
             migrationBuilder.DropTable(
-                name: "Role");
-
-            migrationBuilder.DropTable(
                 name: "Support");
-
-            migrationBuilder.DropTable(
-                name: "SupportDetails");
 
             migrationBuilder.DropTable(
                 name: "TicketingPoint");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "UsersDb");
         }
     }
 }
