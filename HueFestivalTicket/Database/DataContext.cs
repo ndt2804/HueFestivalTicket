@@ -20,7 +20,7 @@ namespace HueFestivalTicket.Database
         public DbSet<UserDb> UsersDb { get; set; }
         public DbSet<TicketingPoint> TicketingPoint { get; set; }
 
-        public DbSet<Menu> Menu { get; set; }
+        //public DbSet<Menu> Menu { get; set; }
 
     }
 }

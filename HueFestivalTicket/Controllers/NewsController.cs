@@ -79,6 +79,41 @@ namespace HueFestivalTicket.Controllers
 
             return Ok("News successfully created!");
         }
+        [HttpPut("UpdateNews/{id}")]
+        public async Task<ActionResult<News>> UpdateNews(int id, News updatedNews)
+        {
+            var news = await _context.News.FindAsync(id);
+            if (news == null)
+            {
+                return NotFound();
+            }
+
+            news.Title = updatedNews.Title;
+            news.Sumary = updatedNews.Sumary;
+            news.Image_URL = updatedNews.Image_URL;
+            news.Content = updatedNews.Content;
+            news.Author = updatedNews.Author;
+            news.Keyword = updatedNews.Keyword;
+
+            _context.News.Update(news);
+            await _context.SaveChangesAsync();
+
+            return Ok(news);
+        }
+        [HttpDelete("DeleteNews/{id}")]
+        public async Task<ActionResult> DeleteNews(int id)
+        {
+            var news = await _context.News.FindAsync(id);
+            if (news == null)
+            {
+                return NotFound();
+            }
+
+            _context.News.Remove(news);
+            await _context.SaveChangesAsync();
+
+            return Ok("News successfully deleted!");
+        }
 
         [HttpGet("RelatedNews/{id}")]
         public ActionResult<IEnumerable<News>> GetRelatedNews(int id)

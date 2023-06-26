@@ -44,6 +44,9 @@ namespace HueFestivalTicket.Controllers
                 Result result = reader.Decode(source);
                 if (result != null)
                 {
+
+                    //Check vé trong database => Hợp lệ thì cho vào
+                                              
                     return Ok(result.Text);
                 }
                 else

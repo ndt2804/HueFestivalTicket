@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HueFestivalTicket.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230621203212_updateTable")]
-    partial class updateTable
+    [Migration("20230626014815_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

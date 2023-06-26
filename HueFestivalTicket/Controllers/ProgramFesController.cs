@@ -50,6 +50,43 @@ namespace HueFestivalTicket.Controllers
 
             return Ok("Programs successfully created!");
         }
+        [HttpPut("updateProgram/{id}")]
+        public async Task<ActionResult<ProgramFes>> UpdateProgram(int id, ProgramFesDto updatedProgram)
+        {
+            var program = await _context.ProgramFes.FindAsync(id);
+            if (program == null)
+            {
+                return NotFound();
+            }
+
+            program.Title = updatedProgram.Title;
+            program.Decriptions = updatedProgram.Decriptions;
+            program.Image_URL = updatedProgram.Image_URL;
+            program.Place = updatedProgram.Place;
+            program.Price = updatedProgram.Price;
+            program.Type_Program = updatedProgram.Type_Program;
+            program.Type_Inoff = updatedProgram.Type_Inoff;
+
+            _context.ProgramFes.Update(program);
+            await _context.SaveChangesAsync();
+
+            return Ok(program);
+        }
+        [HttpDelete("DeleteProgram/{id}")]
+        public async Task<ActionResult> DeleteProgram(int id)
+        {
+            var program = await _context.ProgramFes.FindAsync(id);
+            if (program == null)
+            {
+                return NotFound();
+            }
+
+            _context.ProgramFes.Remove(program);
+            await _context.SaveChangesAsync();
+
+            return Ok("Program successfully deleted!");
+        }
+
         [HttpGet("{Type_Program}")]
         public async Task<ActionResult<List<ProgramFes>>> GetTypeProgram(int Type_Program)
         {
