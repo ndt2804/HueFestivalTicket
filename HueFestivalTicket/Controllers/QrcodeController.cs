@@ -13,6 +13,7 @@ using SkiaSharp;
 using ZXing.Common;
 using System;
 using ZXing.QrCode.Internal;
+using System.Runtime.InteropServices;
 
 namespace HueFestivalTicket.Controllers
 {
@@ -34,7 +35,7 @@ namespace HueFestivalTicket.Controllers
         public async Task<IActionResult> ScanQRCode()
         {
             string image = "D:\\Dotnet\\HueFestivalTicket\\HueFestivalTicket\\Image\\qrcode.png";
-
+            //string image = "D:\\Dotnet\\HueFestivalTicket\\HueFestivalTicket\\Image\\qrcodeIsvalid.png";
             var reader = new BarcodeReaderGeneric();
             Bitmap bitmap = (Bitmap)Image.FromFile(image);
             using (bitmap)
@@ -45,8 +46,19 @@ namespace HueFestivalTicket.Controllers
                 if (result != null)
                 {
 
-                    //Check vé trong database => Hợp lệ thì cho vào
-                                              
+                    string qrCodeText = result.Text;
+
+                    bool isQRCodeValid = await CheckQRCodeValidity(qrCodeText);
+
+                    if (isQRCodeValid)
+                    {
+                        return Ok("QR Code is valid.");
+                    }
+                    else
+                    {
+                        return BadRequest("QR Code is invalid.");
+                    }
+
                     return Ok(result.Text);
                 }
                 else
@@ -55,6 +67,20 @@ namespace HueFestivalTicket.Controllers
                 }
             }
         }
+
+        private async Task<bool> CheckQRCodeValidity(string qrCodeText)
+        {
+                var existingRecord = await _context.Qrcode.FirstOrDefaultAsync(record => record.qrcode == qrCodeText);
+                if (existingRecord != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            
         }
+    }
 }
 

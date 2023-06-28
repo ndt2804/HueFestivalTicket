@@ -1,6 +1,7 @@
 ﻿using HueFestivalTicket.Models.Menu;
 using HueFestivalTicket.Models.News;
 using HueFestivalTicket.Models.ProgramFes;
+using HueFestivalTicket.Models.qrCode;
 using HueFestivalTicket.Models.Support;
 using HueFestivalTicket.Models.TicketingPoint;
 using HueFestivalTicket.Models.User;
@@ -21,6 +22,6 @@ namespace HueFestivalTicket.Database
         public DbSet<TicketingPoint> TicketingPoint { get; set; }
 
         //public DbSet<Menu> Menu { get; set; }
-
+        public DbSet<Qrcode> Qrcode { get; set; }
     }
 }

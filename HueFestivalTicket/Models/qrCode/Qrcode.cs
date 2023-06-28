@@ -4,7 +4,8 @@ namespace HueFestivalTicket.Models.qrCode
 {
     public class Qrcode
     {
-        [Required]
+        [Key]
+        public int Id { get; set; }
         public string qrcode { get; set; }
     }
 }

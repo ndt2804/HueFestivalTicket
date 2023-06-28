@@ -1,4 +1,5 @@
 ﻿using HueFestivalTicket.Database;
+using HueFestivalTicket.Models.News;
 using HueFestivalTicket.Models.ProgramFes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +24,12 @@ namespace HueFestivalTicket.Controllers
 
         //[HttpGet, Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<ActionResult<List<ProgramFes>>> getProgramFes()
+        public async Task<ActionResult<List<ProgramFes>>> getProgramFes(int page = 1, int pageSize = 2)
         {
-            var listProgram = await _context.ProgramFes.ToListAsync();
+            var listProgram = await _context.ProgramFes
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             return Ok(listProgram);
         }
